@@ -4,7 +4,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { BloodbankService } from '../blood-bank.service';
 import { bloodGroup } from '../bloodGroup.model';
 
 @Component({
@@ -23,13 +23,7 @@ export class HomeComponent implements OnInit {
   numOfBottels = Array(20);
 
   bucket: bloodGroup[] = [];
-  constructor(private _snackBar: MatSnackBar) {}
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 2 * 1000,
-    });
-  }
+  constructor(private bldService: BloodbankService) {}
 
   ngOnInit(): void {
     if (!localStorage.getItem('data')) {
@@ -84,7 +78,7 @@ export class HomeComponent implements OnInit {
   checkBloodGroups(event: any) {
     console.log(this.bloodType, event.value);
     if (!this.bloodGroupSelected) {
-      this.openSnackBar('Please Select the Blood Group', 'Close');
+      this.bldService.showAlert('Please Select the Blood Group', 'Close');
       return;
     }
 
@@ -98,20 +92,14 @@ export class HomeComponent implements OnInit {
         el.quantity = event.value;
       });
       this.bloodGrpAvailable.push(...blData);
-      console.log(blData);
+    } else {
+      this.bldService.showAlert(
+        'Not enough quantity in repository! ☹',
+        'Close'
+      );
     }
-    console.log(this.bloodGroupIndex);
   }
-
-  getBackgroundColor(bloodGrp: any) {
-    if (bloodGrp === 'A+') return '#93C47D';
-    else if (bloodGrp === 'B+') return '#B7B7B7';
-    else if (bloodGrp === 'O+') return '#93C47D';
-    else if (bloodGrp === 'AB+') return '#B7B7B7';
-    else if (bloodGrp === 'A-') return '#38761D';
-    else if (bloodGrp === 'B-') return '#B7B7B7';
-    else if (bloodGrp === 'O-') return '#38761D';
-    else if (bloodGrp === 'AB-') return '#B7B7B7';
-    else return '#93C47D';
+  getBackgroundColor(bloodType: string) {
+    this.bldService.getBackgroundColor(bloodType);
   }
 }
