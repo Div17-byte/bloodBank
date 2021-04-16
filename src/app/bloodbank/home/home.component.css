@@ -1,0 +1,38 @@
+.mat-form-field {
+  width: 50%;
+  text-align: center;
+  color: black;
+}
+
+
+  .bloodType input[type="number"]:disabled {
+    color: black;
+    transition: box-shadow 500ms rgb(30, 255, 0);
+   }
+
+  .bucket-list {
+    padding: 10px 5px;
+    border-style:none;
+    border-top-style: none;
+    width: auto;
+    min-height: 200px;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    display: block;
+  }
+
+  .availableBucket {
+    border: 1px solid rgb(2, 192, 255);
+    border-top-style: none;
+  }
+
+  .bucket {
+    border: 1px solid green;
+    border-top-style: none;
+  }
+
+  .card-container {
+    display: flex;
+    justify-content: space-between;
+  }

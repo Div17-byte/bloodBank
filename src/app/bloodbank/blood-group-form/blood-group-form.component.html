@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <div class="heading mt-4 mb-4">
+    <h2>Fill Blood Bank Details</h2>
+  </div>
+  <form (ngSubmit)="onSubmitForm()" #form="ngForm">
+    <div class="d-flex flex-wrap p-2">
+      <div
+        *ngFor="let item of bloodGrpData; let i = index"
+        class="bloodGrpBox mb-5"
+      >
+        <div class="bloodType">
+          <input
+            disabled
+            readonly
+            type="text"
+            name="bloodType-{{ item.bloodGroup }}"
+            [(ngModel)]="item.bloodGroup"
+            [ngStyle]="{
+              'background-color': getBackgroundColor(item.bloodGroup)
+            }"
+          />
+        </div>
+        <mat-form-field>
+          <mat-label>Bottels</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            [(ngModel)]="item.quantity"
+            required
+            name="bottleInput-{{ i }}"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="btn">
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        mat-raised-button
+        color="primary"
+      >
+        Save & Continue
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,203 @@
+<h1 *ngIf="dataNotFound" class="text-center mt-5">
+  Please Fill the Data first
+</h1>
+<div class="container-fluid mb-4 mt-4">
+  <div class="d-flex flex-wrap p-2">
+    <div
+      *ngFor="let item of bloodGrpData; let i = index"
+      class="bloodGrpBox mb-5"
+    >
+      <div class="bloodType">
+        <input
+          disabled
+          readonly
+          type="text"
+          name="bloodType-{{ item.bloodGroup }}"
+          [ngModel]="item.bloodGroup"
+          [style.background-color]="getBackgroundColor(item.bloodGroup)"
+          [ngStyle]="
+            bloodGroupIndex === i
+              ? {
+                  'box-shadow': '0 0 50px rgb(30, 255, 0)',
+                  'outline-color': 'green'
+                }
+              : {}
+          "
+        />
+      </div>
+      <mat-form-field>
+        <mat-label>Bottels</mat-label>
+        <input
+          readonly
+          matInput
+          type="number"
+          min="0"
+          [ngModel]="item.quantity"
+          required
+          name="bottleInput-{{ i }}"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <!--^ container end -->
+
+  <!-- Requirement Form -->
+  <section class="container-fluid mt-2" cdkDropListGroup>
+    <h3>Requirement Form</h3>
+    <div class="row justify-content-center flex-warp">
+      <div class="col-md-4">
+        <!-- {{bloodGroup}} -->
+        <div class="col-md-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Blood required</mat-label>
+            <mat-select [(ngModel)]="bloodType">
+              <mat-option
+                (click)="bloodGroupSelected = true"
+                *ngFor="let bloodType of bloodGrpData"
+                [value]="bloodType.bloodGroup"
+              >
+                {{ bloodType.bloodGroup }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Number of Bottles</mat-label>
+            <mat-select
+              [disabled]="!bloodGroupSelected"
+              (selectionChange)="checkBloodGroups($event)"
+            >
+              <mat-option
+                *ngFor="let bloodType of numOfBottels; let i = index"
+                [value]="i + 1"
+              >
+                {{ i + 1 }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <div
+          style="position: relative"
+          class="bucket-list availableBucket"
+          cdkDropList
+          #bloodGroup="cdkDropList"
+          [cdkDropListData]="bloodGrpAvailable"
+          [cdkDropListConnectedTo]="[bucketList]"
+          (cdkDropListDropped)="drop($event)"
+          cdkDropListSortingDisabled
+        >
+          <h2 class="text-center" [ngStyle]="{ color: 'green' }">
+            Available ☑
+          </h2>
+
+          <div
+            cdkDrag
+            *ngFor="let item of bloodGrpAvailable; let i = index"
+            class="bloodGrpBox mb-5"
+          >
+            <div class="bloodType">
+              <input
+                disabled
+                readonly
+                type="text"
+                attr.data-target="{{ item.bloodGroup }}"
+                name="{{ item.bloodGroup }}"
+                [ngModel]="item.bloodGroup"
+                [style.background-color]="getBackgroundColor(item.bloodGroup)"
+                [ngStyle]="{
+                  'box-shadow': '0 0 50px rgb(30, 255, 0)',
+                  'outline-color': 'green'
+                }"
+              />
+            </div>
+            <mat-form-field>
+              <mat-label>Bottels Selected</mat-label>
+              <input
+                readonly
+                matInput
+                type="number"
+                min="0"
+                [ngModel]="item.quantity"
+                required
+                name="bottleInput-{{ i }}"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <label class="text-muted">*Drag to bucket</label>
+      </div>
+
+      <!-- Bucket -->
+      <div class="col-md-4 text-center">
+        <div
+          cdkDropList
+          #bucketList="cdkDropList"
+          [cdkDropListData]="bucket"
+          [cdkDropListConnectedTo]="[bloodGroup]"
+          cdkDropListSortingDisabled
+          class="bucket-list bucket"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <h2 class="text-center">Bucket 📥</h2>
+
+          <div
+            cdkDrag
+            *ngFor="let item of bucket; let i = index"
+            class="bloodGrpBox mb-5"
+          >
+            <div class="bloodType">
+              <input
+                disabled
+                readonly
+                type="text"
+                name="bloodType-{{ item.bloodGroup }}"
+                [ngModel]="item.bloodGroup"
+                [style.background-color]="getBackgroundColor(item.bloodGroup)"
+              />
+            </div>
+            <mat-form-field>
+              <mat-label>Bottels Selected</mat-label>
+              <input
+                readonly
+                matInput
+                type="number"
+                min="0"
+                [ngModel]="item.quantity"
+                required
+                name="bottleInput-{{ i }}"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <button
+          class="mt-2"
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="checkout()"
+        >
+          Checkout
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-fluid mt-5">
+    <h1>Checkout History</h1>
+    <h3 class="text-muted" *ngIf="checkOutHistory.length === 0">
+      No Checkout history found !
+    </h3>
+
+    <mat-card *ngFor="let history of checkOutHistory" class="card-container">
+      <mat-card-title>BloodGroup : {{ history.bloodGroup }} </mat-card-title>
+      <mat-card-title>Quantity : {{ history.quantity }} </mat-card-title>
+      <mat-card-subtitle
+        >Date : {{ getDate() | date: "medium" }}
+      </mat-card-subtitle>
+    </mat-card>
+  </section>
+</div>

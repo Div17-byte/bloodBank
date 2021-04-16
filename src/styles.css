@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.bloodType input[type=text] {
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.2em;
+  border: none;
+  outline-color: black;
+  outline-style:solid;
+  outline-width: 2px;
+}
+.bloodType input[type="text"]:disabled {
+ color: black;
+}
+
+.bloodGrpBox {
+  display: inline-flex;
+}
+
+
